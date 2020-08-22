@@ -1,0 +1,19 @@
+# Space Invaders
+
+Simple game made in python using pygame to get familarized with it.
+
+## Setup
+
+    python -m venv env
+    source env/bin/activate
+    pip install -r requirements.txt
+
+## Start
+
+    python main.py
+
+## Controls
+
+- left arrow key to move player left
+- right arrow key to move player right
+- space to shoot bullet

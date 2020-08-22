@@ -8,7 +8,7 @@ class Player():
         self.screenX = screenX
         self.screenY = screenY
         self.posX = int(self.screenX/2)
-        self.posY = int(self.screenY * .80)
+        self.posY = int(self.screenY * .85)
         self.move_dist = 20
 
     def move_left(self):
@@ -20,4 +20,6 @@ class Player():
             self.posX += self.move_dist
 
     def shoot(self):
-        return Bullet(self.posX, self.posY)
+        bullet = Bullet(self.posX, self.posY)
+        bullet.play_sound()
+        return bullet

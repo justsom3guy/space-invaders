@@ -26,18 +26,39 @@ player = Player(screenX, screenY)
 bullets = []
 
 # Score
-score = 0
+score_val = 0
+score_font = pygame.font.Font('freesansbold.ttf', 32)
+scoreX = 10
+scoreY = 10
+
+
+def render_score(x, y):
+    score = score_font.render(f'Score : {score_val}', True, (255, 255, 255))
+    screen.blit(score, (x, y))
+
+
+# Game over
+game_over_font = pygame.font.Font('freesansbold.ttf', 100)
+game_over_posX = 100
+game_over_posY = 200
+game_over = False
+
+
+def render_game_over(x, y):
+    game_over = game_over_font.render('Game Over', True, (255, 255, 255))
+    screen.blit(game_over, (x, y))
+
 
 # Enemy
-enemy_is_alive = True
-enemy_direction = "right"
-enemy = Enemy(screenX, screenY)
+enemies = []
+for i in range(0, 6):
+    enemies.append(Enemy(screenX, screenY))
 
 
 # Collision check
 def collision(x1, y1, x2, y2):
     dist = math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
-    if dist < 20:
+    if dist < 30:
         return True
     return False
 
@@ -47,23 +68,26 @@ running = True
 while running:
 
     screen.fill((0, 0, 0))
-
     screen.blit(background, (0, 0))
+    screen.blit(player.playerIMG, (player.posX, player.posY))
+    render_score(scoreX, scoreY)
 
-    if enemy_is_alive:
-        if enemy_direction == "right":
+    for enemy in enemies:
+        screen.blit(enemy.enemyIMG, (enemy.posX, enemy.posY))
+        if enemy.direction == "right":
             if enemy.posX + 50 > screenX:
-                enemy_direction = "left"
-                enemy.posY += enemy.move_dist*10
+                enemy.change_direction()
+                enemy.move_down()
             enemy.move_right()
         else:
             if enemy.posX < 10:
-                enemy_direction = "right"
-                enemy.posY += enemy.move_dist*10
+                enemy.change_direction()
+                enemy.move_down()
             enemy.move_left()
-    else:
-        enemy.reset()
-        enemy_is_alive = True
+
+        if enemy.posY >= 450:
+            game_over = True
+            enemies.clear()
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -94,12 +118,14 @@ while running:
         if bullet.posY - 10 < 10:
             bullets.remove(bullet)
 
-        if collision(bullet.posX, bullet.posY, enemy.posX, enemy.posY):
-            score += 1
-            bullets.remove(bullet)
+        for enemy in enemies:
+            if collision(bullet.posX, bullet.posY, enemy.posX, enemy.posY):
+                score_val += 1
+                enemy.reset()
+                if len(bullets):
+                    bullets.remove(bullet)
 
-    print(score)
+    if game_over:
+        render_game_over(game_over_posX, game_over_posY)
 
-    screen.blit(player.playerIMG, (player.posX, player.posY))
-    screen.blit(enemy.enemyIMG, (enemy.posX, enemy.posY))
     pygame.display.update()

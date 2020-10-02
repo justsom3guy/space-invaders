@@ -1,6 +1,6 @@
 # Space Invaders
 
-Simple game - "Space Invaders" made in python using pygame to get familarized with it.
+Simple game - "Space Invaders" made using pygame to get familarized with it.
 
 ## Setup
 
